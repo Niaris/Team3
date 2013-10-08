@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+     <item
+        android:id="@+id/mapTypeNormal"
+        android:title="Normal"/>
+    <item
+        android:id="@+id/mapTypeSatellite"
+        android:title="Satellite"/>
+    <item
+        android:id="@+id/mapTypeTerrain"
+        android:title="Terrain"/>
+    <item
+        android:id="@+id/mapTypeHybrid"
+        android:title="Hybrid"/>
+    <item
+        android:id="@+id/mapTypeNone"
+        android:title="None"/>
+
+     <item
+        android:id="@+id/gotoCurrentLocation"
+        android:showAsAction="always"
+        android:title="@string/current_location"/>
+</menu>
