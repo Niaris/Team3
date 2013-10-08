@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends FragmentActivity implements 
   GooglePlayServicesClient.ConnectionCallbacks,
@@ -205,6 +206,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 		else {
 			LatLng ll = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+			mMap.addMarker(new MarkerOptions().position(ll).title("You are here"));
 			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, DEFAULTZOOM);
 			mMap.animateCamera(update);
 		}
