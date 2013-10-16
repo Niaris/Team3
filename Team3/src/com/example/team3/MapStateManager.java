@@ -1,3 +1,11 @@
+/**
+ * MapStateManager.java is used to save the map state, camera position and map type on state manager so
+ * when the user exits (pause the application). 
+ * @author Andreas Stavrou (Initial coding and Refactoring)
+ * @version 1.0 - 6 October 2013 | Refactored FINISHED on 16 October 2013 
+ */
+
+
 package com.example.team3;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -7,7 +15,11 @@ import com.google.android.gms.maps.model.LatLng;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-@SuppressWarnings("unused")
+/**
+ * 
+ * Public Class private strings.
+ *
+ */
 public class MapStateManager {
 	private static final String LONGITUDE = "longitude";
 	private static final String LATITUDE = "latitude";
@@ -24,6 +36,10 @@ public class MapStateManager {
 		mapStatePrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 	}
 	
+	/**
+	 * Method saveMapState saves the current maps state for when the user leaves the
+	 *  application e.g. presses the home button.
+	 */
 	public void saveMapState(GoogleMap map) {
 		SharedPreferences.Editor editor = mapStatePrefs.edit();
 		CameraPosition position = map.getCameraPosition();
@@ -36,8 +52,13 @@ public class MapStateManager {
 		editor.putInt(MAPTYPE, map.getMapType());
 		
 		editor.commit();
-	}
+	}//Ends saveMapState
 	
+	/**
+	 * Method getSavedCameraPosition saves the camera position that the user had like bearing and zoom
+	 * and passes them to be saved.
+	 * 
+	 */
 	public CameraPosition getSavedCameraPosition() {
 		double latitude = mapStatePrefs.getFloat(LATITUDE, 0);
 		if (latitude == 0) {
@@ -52,11 +73,14 @@ public class MapStateManager {
 		
 		CameraPosition position = new CameraPosition(target, zoom, tilt, bearing);
 		return position;
-	}
+	}//Ends getSavedCameraPosition
 	
 
+	/**
+	 * Gets the saved map type and returns it to normal.
+	 */
 	public int getSavedMapType() {
 		return mapStatePrefs.getInt(MAPTYPE, GoogleMap.MAP_TYPE_NORMAL);
-	}
+	}//Ends getSavedMapType
 
-}
+}//Ends MapStateManager
