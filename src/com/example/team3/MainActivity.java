@@ -18,22 +18,36 @@
  */
 
 package com.example.team3;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import java.lang.Object;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,7 +98,7 @@ public class MainActivity extends FragmentActivity implements
   GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 	
 	public AddressConversion Addr;
-
+	public UploadToServer uploadtoserverclass;
 	
 	
 	/**
@@ -102,7 +116,12 @@ public class MainActivity extends FragmentActivity implements
 	
 	public double LONGITUDE;
 	public double LATITUDE;
-	
+	public String deviceId;
+	 String upLoadServerUri = null;
+	 int serverResponseCode = 0;
+	    /**********  File Path *************/
+	    final String uploadFilePath = Environment.getExternalStorageDirectory()+ "/Coords.xml";
+	    final String uploadFileName = "Coords.xml";
 	/**
 	 * Method onCreate is used when the page first loads. 
 	 * It will use the method servicesOK which will determine IF the
@@ -113,7 +132,11 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		//File myDir = new File(getCacheDir(), "Coords");
+		//myDir.mkdir();
+		
+		
 		Addr = new AddressConversion();
 		if (servicesOK()) {
 			setContentView(R.layout.activity_map);
@@ -334,10 +357,10 @@ public class MainActivity extends FragmentActivity implements
 		Calendar team3Calendar = Calendar.getInstance();
         System.out.println("Current time => " + team3Calendar.getTime());
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         String Date = dateFormat.format(team3Calendar.getTime());
         String Time = timeFormat.format(team3Calendar.getTime());
-		
+        int serverResponseCode = 0;
         //Declared the Latitude and Longitude
         double LAT = loc.getLatitude(); 
 		double LONG = loc.getLongitude(); 		 
@@ -363,7 +386,7 @@ public class MainActivity extends FragmentActivity implements
 		//Text View for showing the Address
 		TextView tvAddress = (TextView)this.findViewById(R.id.txAddress);
 		
-		//THis gets
+		//THis gets the Address of the current location through AddressConversion.java using Json.
 		JSONObject ret = Addr.getLocationInfo(LAT, LONG); 
 		JSONObject location;
 		String location_string;
@@ -377,12 +400,45 @@ public class MainActivity extends FragmentActivity implements
 		   String Address = String.valueOf(location_string);
 		  
 		  //This gives the device a UNIQUE ID (NOTE: Try to add this to another Class).
+		   
+		   
 		  String deviceId = Secure.getString(this.getContentResolver(),
 					Secure.ANDROID_ID);
 		//SAVES TO XML
+		  
+		  
+/*		  String filename = "Coords.xml";
+
+		    FileOutputStream fos;       
+
+		    fos = openFileOutput(filename,Context.MODE_APPEND);
+
+
+		    XmlSerializer serializer = Xml.newSerializer();
+		    serializer.setOutput(fos, "UTF-8");
+		    serializer.startDocument(null, Boolean.valueOf(true));
+		    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+
+		    serializer.startTag(null, "root");
+
+		    for(int j = 0 ; j < 3 ; j++)
+		    {
+
+		        serializer.startTag(null, "record");
+		        serializer.text(data);
+		        serializer.endTag(null, "record");
+		    }
+		     serializer.endDocument();
+
+		     serializer.flush();
+
+		     fos.close();*/
+		  
+		  
 		//File file = new File(context.getFilesDir(), filename);
-	  //getDataDirectory() + "/data/com.example.team3/files/Coords" + Date + Time + UniqueId +".xml"); 
-		 File xmlfile = new File(Environment.getExternalStorageDirectory()+ "/Coords" + Date + Time + deviceId +".xml");
+	  //getDataDirectory() + "/data/com.example.team3/files/Coords" + Date + Time + UniqueId +".xml");  //" + Date + Time + deviceId +"
+		 File xmlfile = new File(Environment.getExternalStorageDirectory()+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId +".xml");
+		 Log.d("FILE PATH","path=" + xmlfile);
 	        try{
 	                xmlfile.createNewFile();
 	        }catch(IOException e){
@@ -412,6 +468,8 @@ public class MainActivity extends FragmentActivity implements
 	                        serializer.startTag(null, "Location");//ROOT
 	                        
 	                        serializer.startTag(null, "Coordinates");//Child 1
+	                        
+	                        	
 	                        
 	                                serializer.startTag(null, "Latitute");
 	                                serializer.text("Latitude: " + loc.getLatitude());
@@ -449,14 +507,85 @@ public class MainActivity extends FragmentActivity implements
 	                        //finally we close the file stream
 	                        fileOutStr.close();
 	                        Toast.makeText(this, "File has been created.",
-	        	    				Toast.LENGTH_SHORT).show();
-	                //TextView tv = (TextView)this.findViewById(R.id.txSavedConfirm);
-	                  //      tv.setText("file has been created on SD card");
+	        	    				Toast.LENGTH_SHORT).show();            
+//54.229.246.242/php/upload1.php
+	                        
 	                } catch (Exception e) {
 	                	Toast.makeText(this, "An error has occured. Restart the app.",
         	    				Toast.LENGTH_SHORT).show();
 	                        Log.e("Exception","error occurred while creating xml file");
 	                }
+	       //<<------------------ UPLAOD TO SERVER FUNCTIONALITY ------------------------>>
+	        HttpURLConnection connection = null;
+	        DataOutputStream outputStream = null;
+	        DataInputStream inputStream = null;
+
+	        String pathToOurFile = Environment.getExternalStorageDirectory()+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId +".xml";
+	        String urlServer = "http://54.246.220.68/upload1.php";
+	        String lineEnd = "\r\n";
+	        String twoHyphens = "--";
+	        String boundary =  "*****";
+	        //String serverResponseMessage = null;
+	        
+	        int bytesRead, bytesAvailable, bufferSize;
+	        byte[] buffer;
+	        int maxBufferSize = 1*1024*1024;
+
+	        try
+	        {
+	        FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile) );
+
+	        URL url = new URL(urlServer);
+	        connection = (HttpURLConnection) url.openConnection();
+
+	        // Allow Inputs & Outputs
+	        connection.setDoInput(true);
+	        connection.setDoOutput(true);
+	        connection.setUseCaches(false);
+
+	        // Enable POST method
+	        connection.setRequestMethod("POST");
+
+	        connection.setRequestProperty("Connection", "Keep-Alive");
+	        connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+
+	        outputStream = new DataOutputStream( connection.getOutputStream() );
+	        outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+	        outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
+	        outputStream.writeBytes(lineEnd);
+
+	        bytesAvailable = fileInputStream.available();
+	        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+	        buffer = new byte[bufferSize];
+
+	        // Read file
+	        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+	        while (bytesRead > 0)
+	        {
+	        outputStream.write(buffer, 0, bufferSize);
+	        bytesAvailable = fileInputStream.available();
+	        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+	        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+	        }
+
+	        outputStream.writeBytes(lineEnd);
+	        outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+	        // Responses from the server (code and message)
+	        serverResponseCode = connection.getResponseCode();
+	       // serverResponseMessage = connection.getResponseMessage();
+
+	        
+	        fileInputStream.close();
+	        outputStream.flush();
+	        outputStream.close();
+	        }
+	        catch (Exception ex)
+	        {
+	        	
+	        //Exception handling
+	        }
 		   
 		} catch (JSONException e1) {
 			 Toast.makeText(this, "Error: " + e1,
@@ -464,12 +593,13 @@ public class MainActivity extends FragmentActivity implements
 		    e1.printStackTrace();
 
 		}
-		 
-		 
-	    		
+		
 		
 	}//Ends onLocationChanged
-		
+	
+	
+
+
 		
 	@Override
 	protected void onPause() {

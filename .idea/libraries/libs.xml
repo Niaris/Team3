@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/org.apache.commons.io.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/click-0.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jboss-3.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/commons-net-3.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/httpmime-4.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/commons-net-3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/commons-net-examples-3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

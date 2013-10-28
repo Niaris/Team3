@@ -5,5 +5,9 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="libs/commons-net-3.3-sources.jar"/>
+	<classpathentry kind="lib" path="libs/commons-net-3.3.jar"/>
+	<classpathentry kind="lib" path="libs/commons-net-examples-3.3.jar"/>
+	<classpathentry kind="lib" path="libs/jboss-3.2.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

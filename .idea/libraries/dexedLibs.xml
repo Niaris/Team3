@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/httpmime-4.0.3-1aae9e404486e802ba535bbd3a75b7bf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-1aa053a22d63d6525164c1a13005cfb8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/org.apache.commons.io-e990460c169a8cb887cd4a6300ea95f6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/click-0.15-2fa177ed2de45de3f595ef81da07faf0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/commons-net-3.3-456aaba925804466f5f03ba1d1e637c9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/google-play-services_lib-44ca9aa798a0a8f8419ab4b06c23c79c.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/google-play-services-a5be0cf989ec046bc200b410832f1392.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/google-play-services_lib-dc84b8e6cde3616adfaf5862623e54fd.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-e4e290d052e6b67216bc1adc7f4efecf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/commons-net-3.3-sources-49d8787787df3b1923266238ce77a197.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-28e41fea122a4a1e4fcc60c4dbddaf79.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/google-play-services-564f314dfeaf8eb81be8d93c4d6a5854.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-a95c3fdf14c05c0592a27d3e44bc3cc5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/commons-net-examples-3.3-8fe12e4de51c68020eb6dd0e3f66687b.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/jboss-3.2.1-882b12d47c357e5a703953724b1b6b2c.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,3 +1,14 @@
+/** 
+ * INTRODUCED IN FR2.
+ * AddressConversion.java is used to retrieve and pass the Address to MainActivity.java and specifically it is called
+ * when the onLocationChanged is called.
+ * @author Andreas Stavrou
+ * @author Salman Alghmdi
+ * @author Rufai Ahmad
+ * @author Sijia Liu
+ * @version 1.2 - 22 October 2013 | Refactored FINISHED on 00/MONTH/2013
+ */
+
 package com.example.team3;
 
 import java.io.IOException;
