@@ -98,6 +98,8 @@ public class MainActivity extends FragmentActivity implements
 	 * available then a Toast Message will be displayed. If it is it will
 	 * connect to LocationClient.
 	 * 
+	 * @param Bundle savedInstanceState Helps to retrieve all values and data of that associated activity when it gets paused.
+	 * @return void Returns a void object.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,9 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Method onCreateOptionsMenu inflates the menu. This adds items to the
 	 * action bar if it is present.
+	 * 
+	 * @param Menu menu Object which holds actions and options.
+	 * @return boolean Returns True to display menu, False to not display menu.
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,6 +148,7 @@ public class MainActivity extends FragmentActivity implements
 	 * error dialog and try, for this instance to update the services. If is not
 	 * available it will show an error toast message.
 	 * 
+	 * @return boolean Return True to indicate Google Service is available and updated, False to indicate Google Service neither available nor updated.
 	 */
 	public boolean servicesOK() {
 		int isAvailable = GooglePlayServicesUtil
@@ -162,8 +168,10 @@ public class MainActivity extends FragmentActivity implements
 	}// Ends servicesOK
 
 	/**
-	 * Method initMap initialises the map fragment from the activity_map.xml. In
+	 * Method initMap initializes the map fragment from the activity_map.xml. In
 	 * other words it fill the map fragment with a map.
+	 * 
+	 * @return boolean Returns True if Map is initialized, False if it is not.
 	 */
 	private boolean initMap() {
 		if (Team3Map == null) {
@@ -179,6 +187,9 @@ public class MainActivity extends FragmentActivity implements
 	 * Method onOptionsItemSelected changes the map to Normal, Satellite,
 	 * Terrain, Hybrid and None. Settings are embedded here for future use if
 	 * required.
+	 * 
+	 * @param MeunItem item The selected item from the menu.
+	 * @return boolean Returns
 	 */
 
 	@Override
@@ -218,7 +229,12 @@ public class MainActivity extends FragmentActivity implements
 
 		return super.onOptionsItemSelected(item);
 	}// End onOptionsItemSelected
-
+	/*
+	 * Method setTextViewColor changes the text' color of the Address' description according to the current type of map. 
+	 *
+	 *@param int color Holds the color' integer value.
+	 *@return void Returns a void object.
+	 */
 	private void setTextViewColor(int color) {
 		TextView tvLat = (TextView) this.findViewById(R.id.txLat);
 		TextView tvLon = (TextView) this.findViewById(R.id.txLon);
@@ -228,11 +244,13 @@ public class MainActivity extends FragmentActivity implements
 		tvLat.setTextColor(color);
 		tvTime.setTextColor(color);
 		tvAddress.setTextColor(color);
-	}
+	}//END setTextViewColor
 
 	/**
 	 * Method onStop saves the map when the application stops to a
 	 * MapStateManager imported from MapStateManager.java
+	 * 
+	 * @return void Return a void object.
 	 */
 	@Override
 	protected void onStop() {
@@ -244,7 +262,9 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Method onResume resumes the map when the application re-opens to where it
 	 * was left and updates the camera position. It also restores the map type
-	 * that was previously selected
+	 * that was previously selected.
+	 * 
+	 * @return void Return a void object.
 	 */
 	@Override
 	protected void onResume() {
@@ -274,6 +294,8 @@ public class MainActivity extends FragmentActivity implements
 	 * available a toast message will appear informing the user that it is not
 	 * available. If it is it will take him/her back and it will reset the zoom
 	 * etc.
+	 * 
+	 * @return void Return a void object.
 	 */
 	protected void gotoCurrentLocation() {
 		Location currentLocation = mLocationClient.getLastLocation();
@@ -310,6 +332,9 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Method onConnected is used for when the connection succeeds to display a
 	 * toast message to inform the user.
+	 * 
+	 * @param Bundle arg0 Bundle of data provided to clients by Google Play services. May be null if no content is provided by the service. 
+	 * @return void Return a void object.
 	 */
 	@Override
 	public void onConnected(Bundle arg0) {
@@ -337,6 +362,12 @@ public class MainActivity extends FragmentActivity implements
 	}// Ends requestLocationUpdates
 
 	@Override
+	/*
+	 * Method onLocationChanged responsible for updating Address Description of the updated location.
+	 * 
+	 * @param Location loc hold the value of the updated location.
+	 * @return Returns a void object.
+	 */
 	public void onLocationChanged(Location loc) {
 		// Toast.makeText(this, "Location: " + loc.getLatitude() + "," +
 		// loc.getLongitude(),
@@ -420,9 +451,21 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 	}// Ends onLocationChanged
-
+	/*
+	 * Method generateXML() used to generate the XML file with address description as its content before it gets uploaded to the server.
+	 * 
+	 * @param Location loc, holds the location value.
+	 * 		  String date, holds the date value. 
+	 * 		  String Time, holds the time value.
+	 * 		  String Address, holds the address value including the Post Code.
+	 * 		  String deviceId, holds the unique ID for a device that uses the app.
+	 * @return void Returns a void object.
+	 */
 	public void generateXML(Location loc, String Date, String Time,
 			String Address, String deviceId) {
+		/*XMLGenerator xmlGen = new XMLGenerator();
+		xmlGen.generate(Date, Time, deviceId, loc, Address);*/
+		
 		File xmlfile = new File(Environment.getExternalStorageDirectory()
 				+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId + ".xml");
 		Log.d("FILE PATH", "path=" + xmlfile);
@@ -503,7 +546,14 @@ public class MainActivity extends FragmentActivity implements
 			Log.e("Exception", "error occurred while creating xml file");
 		}
 	}// Ends generateXML
-
+	/*
+	 * uploadToServer method, used to upload the generated XML file to the server.
+	 * 
+	 * @param String Date, Holds the date value of the upload.
+	 * 		  String Time, Holds the time value of the upload.
+	 * 		  String deviceId, Holds the deviceId value which its file is to be upload to the server.
+	 * @return void Returns a void object.
+	 */
 	public void uploadToServer(String Date, String Time, String deviceId) {
 
 		HttpURLConnection connection = null;
@@ -584,7 +634,11 @@ public class MainActivity extends FragmentActivity implements
 			// Exception handling
 		}
 	}// Ends uploadToServer
-
+	/*
+	 * onPause method, used as part of the activity lifecycle when an activity is going in the background and it has not yet being killed.
+	 * 
+	 * @return void Returns a void object.
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
