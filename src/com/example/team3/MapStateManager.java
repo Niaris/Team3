@@ -1,6 +1,5 @@
 /**
- * MapStateManager.java is used to save the map state, camera position and map type on state manager so
- * when the user exits (pause the application), it can resume the position of the map etc. 
+ * FR1
  * @author Andreas Stavrou (Initial coding and Refactoring)
  * @version 1.0 - 6 October 2013 | Refactored FINISHED on 16 October 2013 
  */
@@ -15,9 +14,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * 
- * Public Class private strings.
- * 
+ * MapStateManager.java is used to save the map state, camera position and map type on state manager so
+ * when the user exits (pause the application), it can resume the position of the map etc. 
  */
 public class MapStateManager {
 	private static final String LONGITUDE = "longitude";
@@ -55,9 +53,11 @@ public class MapStateManager {
 	}// Ends saveMapState
 
 	/**
-	 * Method getSavedCameraPosition saves the camera position that the user had
-	 * like bearing and zoom and passes them to be saved.
+	 * Method saveMapState saves the current maps state for when the user leaves
+	 * the application e.g. presses the home button.
 	 * 
+	 * @param GoogleMap map, an object which has the google map on it.
+	 * @return void, returns a void object.
 	 */
 	public CameraPosition getSavedCameraPosition() {
 		double latitude = mapStatePrefs.getFloat(LATITUDE, 0);
@@ -78,7 +78,10 @@ public class MapStateManager {
 
 	/**
 	 * Gets the saved map type and returns it to normal.
+	 * 
+	 * @return int, returns interger value of the map type.
 	 */
+	
 	public int getSavedMapType() {
 		return mapStatePrefs.getInt(MAPTYPE, GoogleMap.MAP_TYPE_NORMAL);
 	}// Ends getSavedMapType
