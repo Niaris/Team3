@@ -19,31 +19,21 @@
 
 package com.example.team3;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlSerializer;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.Settings.Secure;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -89,6 +79,8 @@ public class MainActivity extends FragmentActivity implements
 	public String deviceId;
 	public String upLoadServerUri = null;
 	public int serverResponseCode = 0;
+	private XMLGenerator xmlGenerator;
+	private UploadFiletoServer fileUploader;
 
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
@@ -98,13 +90,16 @@ public class MainActivity extends FragmentActivity implements
 	 * available then a Toast Message will be displayed. If it is it will
 	 * connect to LocationClient.
 	 * 
-	 * @param Bundle savedInstanceState Helps to retrieve all values and data of that associated activity when it gets paused.
+	 * @param Bundle
+	 *            savedInstanceState Helps to retrieve all values and data of
+	 *            that associated activity when it gets paused.
 	 * @return void Returns a void object.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		xmlGenerator = new XMLGenerator();
+		fileUploader = new UploadFiletoServer();
 		Addr = new AddressConversion();
 		if (servicesOK()) {
 			setContentView(R.layout.activity_map);
@@ -132,7 +127,8 @@ public class MainActivity extends FragmentActivity implements
 	 * Method onCreateOptionsMenu inflates the menu. This adds items to the
 	 * action bar if it is present.
 	 * 
-	 * @param Menu menu Object which holds actions and options.
+	 * @param Menu
+	 *            menu Object which holds actions and options.
 	 * @return boolean Returns True to display menu, False to not display menu.
 	 */
 	@Override
@@ -148,7 +144,9 @@ public class MainActivity extends FragmentActivity implements
 	 * error dialog and try, for this instance to update the services. If is not
 	 * available it will show an error toast message.
 	 * 
-	 * @return boolean Return True to indicate Google Service is available and updated, False to indicate Google Service neither available nor updated.
+	 * @return boolean Return True to indicate Google Service is available and
+	 *         updated, False to indicate Google Service neither available nor
+	 *         updated.
 	 */
 	public boolean servicesOK() {
 		int isAvailable = GooglePlayServicesUtil
@@ -188,7 +186,8 @@ public class MainActivity extends FragmentActivity implements
 	 * Terrain, Hybrid and None. Settings are embedded here for future use if
 	 * required.
 	 * 
-	 * @param MeunItem item The selected item from the menu.
+	 * @param MeunItem
+	 *            item The selected item from the menu.
 	 * @return boolean Returns
 	 */
 
@@ -229,11 +228,13 @@ public class MainActivity extends FragmentActivity implements
 
 		return super.onOptionsItemSelected(item);
 	}// End onOptionsItemSelected
-	/*
-	 * Method setTextViewColor changes the text' color of the Address' description according to the current type of map. 
-	 *
-	 *@param int color Holds the color' integer value.
-	 *@return void Returns a void object.
+
+	/**
+	 * Method setTextViewColor changes the text' color of the Address'
+	 * description according to the current type of map.
+	 * 
+	 * @param int color Holds the color' integer value.
+	 * @return void Returns a void object.
 	 */
 	private void setTextViewColor(int color) {
 		TextView tvLat = (TextView) this.findViewById(R.id.txLat);
@@ -244,7 +245,7 @@ public class MainActivity extends FragmentActivity implements
 		tvLat.setTextColor(color);
 		tvTime.setTextColor(color);
 		tvAddress.setTextColor(color);
-	}//END setTextViewColor
+	}// END setTextViewColor
 
 	/**
 	 * Method onStop saves the map when the application stops to a
@@ -284,7 +285,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}// Ends onResume
 
-	/*
+	/**
 	 * Method gotoCurrentLocation is used to take the user back to his/hers
 	 * current location. Since the user may move away from the current location
 	 * (For instance, move the map around), to go back to the current location
@@ -333,7 +334,10 @@ public class MainActivity extends FragmentActivity implements
 	 * Method onConnected is used for when the connection succeeds to display a
 	 * toast message to inform the user.
 	 * 
-	 * @param Bundle arg0 Bundle of data provided to clients by Google Play services. May be null if no content is provided by the service. 
+	 * @param Bundle
+	 *            arg0 Bundle of data provided to clients by Google Play
+	 *            services. May be null if no content is provided by the
+	 *            service.
 	 * @return void Return a void object.
 	 */
 	@Override
@@ -361,17 +365,17 @@ public class MainActivity extends FragmentActivity implements
 		mLocationClient.requestLocationUpdates(request, this);
 	}// Ends requestLocationUpdates
 
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	/*
-	 * Method onLocationChanged responsible for updating Address Description of the updated location.
+	 * Method onLocationChanged responsible for updating Address Description of
+	 * the updated location.
 	 * 
 	 * @param Location loc hold the value of the updated location.
+	 * 
 	 * @return Returns a void object.
 	 */
 	public void onLocationChanged(Location loc) {
-		// Toast.makeText(this, "Location: " + loc.getLatitude() + "," +
-		// loc.getLongitude(),
-		// Toast.LENGTH_SHORT).show();
 
 		// SHOWS THE DATE/TIME (CALENDAR)
 		Calendar team3Calendar = Calendar.getInstance();
@@ -380,7 +384,6 @@ public class MainActivity extends FragmentActivity implements
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 		String Date = dateFormat.format(team3Calendar.getTime());
 		String Time = timeFormat.format(team3Calendar.getTime());
-		// int serverResponseCode = 0;
 		// Declared the Latitude and Longitude
 		double LAT = loc.getLatitude();
 		double LONG = loc.getLongitude();
@@ -438,204 +441,36 @@ public class MainActivity extends FragmentActivity implements
 
 			// Calls generateXML method in order to save the details to an XML
 			// file
-			generateXML(loc, Date, Time, Address, deviceId);
+			try {
+				xmlGenerator.generate(Date, Time, deviceId, loc, Address);
+				Toast.makeText(this, "File has been created.",
+						Toast.LENGTH_SHORT).show();
+			} catch (Exception e) {
+				Toast.makeText(this, "An error has occured. Restart the app.",
+						Toast.LENGTH_SHORT).show();
+			}
 
 			// Calls uploadToServer in order to upload the xml file to the
 			// server.
-			uploadToServer(Date, Time, deviceId);
+			try {
+				fileUploader.upload(Date, Time, deviceId);
+			} catch (Exception e) {
+				Toast.makeText(this, "An error has occured" + e.getMessage(),
+						Toast.LENGTH_SHORT).show();
+			}
+			Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
 
 		} catch (JSONException e1) {
-			Toast.makeText(this, "Error: " + e1, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Error: " + e1.getMessage(), Toast.LENGTH_SHORT).show();
 			e1.printStackTrace();
 
 		}
 
 	}// Ends onLocationChanged
+
 	/*
-	 * Method generateXML() used to generate the XML file with address description as its content before it gets uploaded to the server.
-	 * 
-	 * @param Location loc, holds the location value.
-	 * 		  String date, holds the date value. 
-	 * 		  String Time, holds the time value.
-	 * 		  String Address, holds the address value including the Post Code.
-	 * 		  String deviceId, holds the unique ID for a device that uses the app.
-	 * @return void Returns a void object.
-	 */
-	public void generateXML(Location loc, String Date, String Time,
-			String Address, String deviceId) {
-		/*XMLGenerator xmlGen = new XMLGenerator();
-		xmlGen.generate(Date, Time, deviceId, loc, Address);*/
-		
-		File xmlfile = new File(Environment.getExternalStorageDirectory()
-				+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId + ".xml");
-		Log.d("FILE PATH", "path=" + xmlfile);
-		try {
-			xmlfile.createNewFile();
-		} catch (IOException e) {
-			Toast.makeText(this,
-					"An error has occured. Restart the Application.",
-					Toast.LENGTH_SHORT).show();
-			Log.e("IOException", "exception in createNewFile() method");
-		}
-		// we have to bind the new file with a FileOutputStream
-		FileOutputStream fileOutStr = null;
-		try {
-			fileOutStr = new FileOutputStream(xmlfile);
-		} catch (FileNotFoundException e) {
-			Toast.makeText(this,
-					"An error has occured. Restart the Application.",
-					Toast.LENGTH_SHORT).show();
-			Log.e("FileNotFoundException", "can't create FileOutputStream");
-		}
-		// we create a XmlSerializer in order to write xml data
-		XmlSerializer serializer = Xml.newSerializer();
-		try {
-			// we set the FileOutputStream as output for the serializer, using
-			// UTF-8 encoding
-			serializer.setOutput(fileOutStr, "UTF-8");
-			// Write <?xml declaration with encoding (if encoding not null) and
-			// standalone flag (if standalone not null)
-			serializer.startDocument(null, Boolean.valueOf(true));
-			// set indentation option
-			serializer.setFeature(
-					"http://xmlpull.org/v1/doc/features.html#indent-output",
-					true);
-
-			serializer.startTag(null, "Location");// ROOT
-
-			serializer.startTag(null, "Coordinates");// Child 1
-
-			serializer.startTag(null, "Latitute");
-			serializer.text("" + loc.getLatitude());
-			serializer.endTag(null, "Latitute");
-
-			serializer.startTag(null, "Longitude");
-			serializer.text("" + loc.getLongitude());
-			serializer.endTag(null, "Longitude");
-
-			serializer.endTag(null, "Coordinates");
-
-			serializer.startTag(null, "DateTime");// Child 2
-
-			serializer.startTag(null, "Date");
-			serializer.text(Date);
-			serializer.endTag(null, "Date");
-
-			serializer.startTag(null, "Time");
-			serializer.text(Time);
-			serializer.endTag(null, "Time");
-
-			serializer.endTag(null, "DateTime"); // Child 3
-
-			serializer.startTag(null, "Address");
-			serializer.text(Address);
-			serializer.endTag(null, "Address");
-
-			serializer.endTag(null, "Location");
-			serializer.endDocument();
-			// write xml data into the FileOutputStream
-			serializer.flush();
-			// finally we close the file stream
-			fileOutStr.close();
-			Toast.makeText(this, "File has been created.", Toast.LENGTH_SHORT)
-					.show();
-
-		} catch (Exception e) {
-			Toast.makeText(this, "An error has occured. Restart the app.",
-					Toast.LENGTH_SHORT).show();
-			Log.e("Exception", "error occurred while creating xml file");
-		}
-	}// Ends generateXML
-	/*
-	 * uploadToServer method, used to upload the generated XML file to the server.
-	 * 
-	 * @param String Date, Holds the date value of the upload.
-	 * 		  String Time, Holds the time value of the upload.
-	 * 		  String deviceId, Holds the deviceId value which its file is to be upload to the server.
-	 * @return void Returns a void object.
-	 */
-	public void uploadToServer(String Date, String Time, String deviceId) {
-
-		HttpURLConnection connection = null;
-		DataOutputStream outputStream = null;
-
-		String pathToOurFile = Environment.getExternalStorageDirectory()
-				+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId + ".xml";
-		String urlServer = "http://54.246.220.68/upload1.php";
-		String lineEnd = "\r\n";
-		String twoHyphens = "--";
-		String boundary = "*****";
-		// String serverResponseMessage = null;
-
-		int bytesRead, bytesAvailable, bufferSize;
-		byte[] buffer;
-		int maxBufferSize = 1 * 1024 * 1024;
-
-		try {
-			FileInputStream fileInputStream = new FileInputStream(new File(
-					pathToOurFile));
-
-			URL url = new URL(urlServer);
-			connection = (HttpURLConnection) url.openConnection();
-
-			// Allow Inputs & Outputs
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-
-			// Enable POST method
-			connection.setRequestMethod("POST");
-
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Content-Type",
-					"multipart/form-data;boundary=" + boundary);
-
-			outputStream = new DataOutputStream(connection.getOutputStream());
-			outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-			outputStream
-					.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\""
-							+ pathToOurFile + "\"" + lineEnd);
-			outputStream.writeBytes(lineEnd);
-
-			bytesAvailable = fileInputStream.available();
-			bufferSize = Math.min(bytesAvailable, maxBufferSize);
-			buffer = new byte[bufferSize];
-
-			// Read file
-			bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-			while (bytesRead > 0) {
-				outputStream.write(buffer, 0, bufferSize);
-				bytesAvailable = fileInputStream.available();
-				bufferSize = Math.min(bytesAvailable, maxBufferSize);
-				bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-			}
-
-			outputStream.writeBytes(lineEnd);
-			outputStream.writeBytes(twoHyphens + boundary + twoHyphens
-					+ lineEnd);
-
-			// Responses from the server (code and message)
-			serverResponseCode = connection.getResponseCode();
-			// serverResponseMessage = connection.getResponseMessage();
-			Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
-
-			fileInputStream.close();
-			outputStream.flush();
-			outputStream.close();
-			File file = new File(Environment.getExternalStorageDirectory()
-					+ "/Coords" + "-" + Date + "-" + Time + "-" + deviceId
-					+ ".xml");
-			file.delete();
-			Toast.makeText(this, "File Deleted", Toast.LENGTH_SHORT).show();
-		} catch (Exception ex) {
-			Toast.makeText(this, "An error has occured" + ex,
-					Toast.LENGTH_SHORT).show();
-			// Exception handling
-		}
-	}// Ends uploadToServer
-	/*
-	 * onPause method, used as part of the activity lifecycle when an activity is going in the background and it has not yet being killed.
+	 * onPause method, used as part of the activity lifecycle when an activity
+	 * is going in the background and it has not yet being killed.
 	 * 
 	 * @return void Returns a void object.
 	 */
