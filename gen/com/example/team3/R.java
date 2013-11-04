@@ -202,19 +202,23 @@ containing a value of this type.
         public static final int normal=0x7f050001;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int txAddress=0x7f050008;
-        public static final int txLat=0x7f050009;
-        public static final int txLon=0x7f05000a;
+        public static final int txAddress=0x7f05000b;
+        public static final int txLat=0x7f050008;
+        public static final int txLon=0x7f050009;
         public static final int txSavedConfirm=0x7f05000c;
-        public static final int txTime=0x7f05000b;
+        public static final int txTime=0x7f05000a;
         public static final int txUniqueID=0x7f05000d;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_map=0x7f030001;
+        public static final int activity_check_in=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int activity_map=0x7f030002;
+        public static final int activity_reviews=0x7f030003;
     }
     public static final class menu {
-        public static final int main=0x7f090000;
+        public static final int check_in=0x7f090000;
+        public static final int main=0x7f090001;
+        public static final int reviews=0x7f090002;
     }
     public static final class string {
         public static final int action_settings=0x7f06001a;
@@ -316,6 +320,8 @@ containing a value of this type.
         public static final int normal=0x7f06001c;
         public static final int sattelite=0x7f06001d;
         public static final int terrain=0x7f060020;
+        public static final int title_activity_check_in=0x7f060022;
+        public static final int title_activity_reviews=0x7f060023;
     }
     public static final class style {
         /** 

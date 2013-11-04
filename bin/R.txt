@@ -71,15 +71,19 @@ int id none 0x7f050000
 int id normal 0x7f050001
 int id satellite 0x7f050002
 int id terrain 0x7f050003
-int id txAddress 0x7f050008
-int id txLat 0x7f050009
-int id txLon 0x7f05000a
+int id txAddress 0x7f05000b
+int id txLat 0x7f050008
+int id txLon 0x7f050009
 int id txSavedConfirm 0x7f05000c
-int id txTime 0x7f05000b
+int id txTime 0x7f05000a
 int id txUniqueID 0x7f05000d
-int layout activity_main 0x7f030000
-int layout activity_map 0x7f030001
-int menu main 0x7f090000
+int layout activity_check_in 0x7f030000
+int layout activity_main 0x7f030001
+int layout activity_map 0x7f030002
+int layout activity_reviews 0x7f030003
+int menu check_in 0x7f090000
+int menu main 0x7f090001
+int menu reviews 0x7f090002
 int string action_settings 0x7f06001a
 int string app_name 0x7f060019
 int string auth_client_needs_enabling_title 0x7f060014
@@ -114,6 +118,8 @@ int string none 0x7f06001e
 int string normal 0x7f06001c
 int string sattelite 0x7f06001d
 int string terrain 0x7f060020
+int string title_activity_check_in 0x7f060022
+int string title_activity_reviews 0x7f060023
 int style AppBaseTheme 0x7f080000
 int style AppTheme 0x7f080001
 int[] styleable MapAttrs { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d }

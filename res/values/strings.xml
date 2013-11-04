@@ -11,6 +11,7 @@
     <string name="none">None</string>
     <string name="terrain">Terrain</string>
     <string name="current_location">Current Location</string>
-    
+    <string name="title_activity_check_in">CheckInActivity</string>
+    <string name="title_activity_reviews">ReviewsActivity</string>
 
 </resources>
