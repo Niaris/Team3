@@ -2,8 +2,8 @@ package com.team3.dataaccess;
 
 import java.util.List;
 
-import com.team3.entities.Location;
-import com.team3.entities.Review;
+import com.team3.entities.LocationVO;
+import com.team3.entities.ReviewVO;
 
 public class MySQLConnection {
 
@@ -17,22 +17,22 @@ public class MySQLConnection {
 	}
 	
 	
-	public void registerLocation(Location location) {
+	public void registerLocation(LocationVO location) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public List<Location> retrieveLocationsByUserPosition(int latitude, int longitude) {
+	public List<LocationVO> retrieveLocationsByUserPosition(int latitude, int longitude) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void addReviewToLocation(Review review, int locationID) {
+	public void addReview(ReviewVO review) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public List<Review> retrieveReviewsList(int locationID) {
+	public List<ReviewVO> retrieveReviewsList(int locationID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

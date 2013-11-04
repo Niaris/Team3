@@ -11,7 +11,13 @@
     <string name="none">None</string>
     <string name="terrain">Terrain</string>
     <string name="current_location">Current Location</string>
-    <string name="title_activity_check_in">CheckInActivity</string>
-    <string name="title_activity_reviews">ReviewsActivity</string>
+    <string name="title_activity_check_in">Add a Review</string>
+    <string name="title_activity_reviews">List of Reviews</string>
+    <string name="add_picture_text">Add a Picture:</string>
+    <string name="browse_picture_button">Browse</string>
+    <string name="rate_location_text">Rate the location:</string>
+    <string name="add_comment_text">Add a Comment:</string>
+    <string name="save_review_button">Save Review</string>
+    <string name="checkin_button">Check in</string>
 
 </resources>

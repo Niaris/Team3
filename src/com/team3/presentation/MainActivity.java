@@ -19,14 +19,12 @@
 
 package com.team3.presentation;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,6 +34,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +57,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.dataaccess.UploadFiletoServer;
 import com.team3.dataaccess.XMLGenerator;
+import com.team3.entities.LocationVO;
 import com.team3.utils.AddressConversion;
+import com.team3.utils.DateTimeManipulator;
 import com.team3.utils.MapStateManager;
 
 /**
@@ -70,7 +71,6 @@ public class MainActivity extends FragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
-	public AddressConversion Addr;
 	private static final int GPS_ERRORDIALOG_REQUEST = 9000;
 	public GoogleMap Team3Map;
 	private static final float DEFAULTZOOM = 15;
@@ -81,7 +81,8 @@ public class MainActivity extends FragmentActivity implements
 	private XMLGenerator xmlGenerator;
 	private UploadFiletoServer fileUploader;
 	private MySQLConnection DBConnection;
-
+	private String Address;
+	
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
 	 * servicesOK which will determine IF the user's device has up-to-date
@@ -103,7 +104,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
-		Addr = new AddressConversion();
 		if (servicesOK()) {
 			setContentView(R.layout.activity_map);
 
@@ -383,16 +383,14 @@ public class MainActivity extends FragmentActivity implements
 	public void onLocationChanged(Location loc) {
 
 		// SHOWS THE DATE/TIME (CALENDAR)
-		Calendar team3Calendar = Calendar.getInstance();
-		System.out.println("Current time => " + team3Calendar.getTime());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		String Date = dateFormat.format(team3Calendar.getTime());
-		String Time = timeFormat.format(team3Calendar.getTime());
+		String Date = DateTimeManipulator.getCurrentDate();
+		String Time = DateTimeManipulator.getCurrentTime();
+		
 		// Declared the Latitude and Longitude
 		double LAT = loc.getLatitude();
 		double LONG = loc.getLongitude();
-
+		LATITUDE = LAT;
+		LONGITUDE = LONG;
 		// Remove and Add Map Marker
 		LatLng ll = new LatLng(LAT, LONG);
 		if (marker == null) {
@@ -427,7 +425,7 @@ public class MainActivity extends FragmentActivity implements
 
 		// This gets the Address of the current location through
 		// AddressConversion.java using Json.
-		JSONObject ret = Addr.getLocationInfo(LAT, LONG);
+		JSONObject ret = AddressConversion.getLocationInfo(LAT, LONG);
 		JSONObject location;
 		String location_string;
 		try {
@@ -437,7 +435,7 @@ public class MainActivity extends FragmentActivity implements
 
 			tvAddress.setText(location_string);
 
-			String Address = String.valueOf(location_string);
+			Address = String.valueOf(location_string);
 
 			// This gives the device a UNIQUE ID (NOTE: Try to add this to
 			// another Class).
@@ -484,5 +482,20 @@ public class MainActivity extends FragmentActivity implements
 		super.onPause();
 		mLocationClient.removeLocationUpdates(this);
 	}// Ends onPause
+	
+	/**
+	 * checkIn method, used when the user clicks on the "Check in" button.
+	 * It takes the user to another screen: "Check in"
+	 * 
+	 * @return void Returns a void object.
+	 */
+	public void checkIn(View view){
+		Intent intent = new Intent(this, CheckInActivity.class);
+		if(!Address.isEmpty() && LATITUDE != 0 && LONGITUDE != 0) {
+			LocationVO location = new LocationVO(Address, LATITUDE, LONGITUDE);
+			intent.putExtra("LocationVO", location);
+			startActivity(intent);
+		}
+	}
 
 }// Ends MainActivity

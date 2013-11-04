@@ -187,27 +187,38 @@ containing a value of this type.
         public static final int ic_plusone_tall_off_client=0x7f02001d;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f050007;
-        public static final int RelativeLayout1=0x7f050005;
-        public static final int action_settings=0x7f05000e;
-        public static final int gotoCurrentLocation=0x7f050014;
+        public static final int AddAPictureTV=0x7f050006;
+        public static final int Address=0x7f050005;
+        public static final int CheckInButton=0x7f050011;
+        public static final int CommentTV=0x7f05000c;
+        public static final int LinearLayout1=0x7f050012;
+        public static final int RateLocationTV=0x7f05000a;
+        public static final int RelativeLayout1=0x7f05000f;
+        public static final int SaveReviewButton=0x7f05000e;
+        public static final int action_settings=0x7f050019;
+        public static final int browseFileButton=0x7f050008;
+        public static final int commentArea=0x7f05000d;
+        public static final int gotoCurrentLocation=0x7f05001f;
         public static final int hybrid=0x7f050004;
-        public static final int map=0x7f050006;
-        public static final int mapTypeHybrid=0x7f050012;
-        public static final int mapTypeNone=0x7f050013;
-        public static final int mapTypeNormal=0x7f05000f;
-        public static final int mapTypeSatellite=0x7f050010;
-        public static final int mapTypeTerrain=0x7f050011;
+        public static final int imagePathArea=0x7f050007;
+        public static final int imageView1=0x7f050009;
+        public static final int map=0x7f050010;
+        public static final int mapTypeHybrid=0x7f05001d;
+        public static final int mapTypeNone=0x7f05001e;
+        public static final int mapTypeNormal=0x7f05001a;
+        public static final int mapTypeSatellite=0x7f05001b;
+        public static final int mapTypeTerrain=0x7f05001c;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
+        public static final int ratingBar=0x7f05000b;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int txAddress=0x7f05000b;
-        public static final int txLat=0x7f050008;
-        public static final int txLon=0x7f050009;
-        public static final int txSavedConfirm=0x7f05000c;
-        public static final int txTime=0x7f05000a;
-        public static final int txUniqueID=0x7f05000d;
+        public static final int txAddress=0x7f050016;
+        public static final int txLat=0x7f050013;
+        public static final int txLon=0x7f050014;
+        public static final int txSavedConfirm=0x7f050017;
+        public static final int txTime=0x7f050015;
+        public static final int txUniqueID=0x7f050018;
     }
     public static final class layout {
         public static final int activity_check_in=0x7f030000;
@@ -222,6 +233,8 @@ containing a value of this type.
     }
     public static final class string {
         public static final int action_settings=0x7f06001a;
+        public static final int add_comment_text=0x7f060027;
+        public static final int add_picture_text=0x7f060024;
         public static final int app_name=0x7f060019;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
@@ -246,6 +259,8 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f060013;
+        public static final int browse_picture_button=0x7f060025;
+        public static final int checkin_button=0x7f060029;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -318,7 +333,9 @@ containing a value of this type.
         public static final int hybrid=0x7f06001f;
         public static final int none=0x7f06001e;
         public static final int normal=0x7f06001c;
+        public static final int rate_location_text=0x7f060026;
         public static final int sattelite=0x7f06001d;
+        public static final int save_review_button=0x7f060028;
         public static final int terrain=0x7f060020;
         public static final int title_activity_check_in=0x7f060022;
         public static final int title_activity_reviews=0x7f060023;
@@ -350,6 +367,8 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        public static final int Button=0x7f080003;
+        public static final int CheckinForm=0x7f080002;
     }
     public static final class styleable {
         /** Attributes that can be used with a MapAttrs.

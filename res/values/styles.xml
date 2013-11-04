@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,5 +16,20 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+	
+    <style name="CheckinForm" parent="AppBaseTheme" >
+        <item name="android:textColor">#222222</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:paddingBottom">12dip</item>
+        <item name="android:paddingTop">20dip</item>
+    </style>
+    
+    <style name="Button" parent="AppBaseTheme" >
+		<item name="android:textColor">#eeeeee</item>
+		<item name="android:background">#336699</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:paddingLeft">12dip</item>
+		<item name="android:paddingRight">12dip</item>
+	</style>
+    
 </resources>

@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,7 +6,102 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".CheckInActivity" >
+    android:orientation="vertical"
+    tools:context=".CheckInActivity">
+    
+	<TextView
+        android:id="@+id/Address"
+        style="@style/CheckinForm"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ddddff"
+        android:maxLines="10"
+        android:padding="5dip"
+        android:textSize="16sp" />
 
+	<ScrollView android:layout_width="match_parent"
+    	android:layout_height="match_parent">
 
-</RelativeLayout>
+	<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:focusable="true" 
+		    android:focusableInTouchMode="true" >
+	
+		    	
+	        <TextView
+	            android:id="@+id/AddAPictureTV"
+	            style="@style/CheckinForm"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/add_picture_text" />
+		    
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" >
+				
+		        
+			   <EditText
+			        android:id="@+id/imagePathArea"
+			        android:layout_width="220dip"
+			        android:layout_height="wrap_content"
+			        android:ems="10"
+			        android:inputType="text" />
+				
+		        <Button
+		            android:id="@+id/browseFileButton"
+		        	style="@style/Button"
+		            android:layout_width="fill_parent"
+		            android:layout_height="35dip"
+		            android:layout_marginLeft="10dip"
+		            android:text="@string/browse_picture_button" />
+		    </LinearLayout>
+
+		    <ImageView
+		        android:id="@+id/imageView1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" />
+	
+		    <TextView
+		        android:id="@+id/RateLocationTV"
+		        style="@style/CheckinForm"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/rate_location_text" />
+	
+		    <RatingBar
+		        android:id="@+id/ratingBar"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" />
+	
+		    <TextView
+		        android:id="@+id/CommentTV"
+		        style="@style/CheckinForm"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/add_comment_text" />
+	
+		    <EditText
+		        android:id="@+id/commentArea"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:ems="10"
+		        android:inputType="textMultiLine" />
+	
+		    <Button
+		        android:id="@+id/SaveReviewButton"
+		        style="@style/Button"
+		        android:layout_width="wrap_content"
+		        android:layout_height="40dip"
+		        android:textSize="20sp"
+		        android:text="@string/save_review_button"
+		        android:gravity="center"
+		        android:layout_gravity="center"
+		        android:layout_marginTop="30dip"
+		        android:onClick="saveReview" />
+		</LinearLayout>
+    
+	</ScrollView>
+    
+</LinearLayout>

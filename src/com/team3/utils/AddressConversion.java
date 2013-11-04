@@ -22,24 +22,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
-/*
+/**
  * AddressConversion class, responsible for converting the Longitude and Latitude to readable Address.
  */
 public class AddressConversion {
-	/*
-	 * Contractor method.
-	 */
-	public AddressConversion() {
 
-	}
-	/*
+	/**
 	 * getLocationInfo method, used to convert the Longitude and Latitude to a readable Address.
 	 * 
 	 * @param double lat, Holds the value of the current latitude coordinate.
 	 * @param double lan, Holds the value of the current longitude coordinate.
 	 * @return JSONObject returns a JSON object that contains the readable address.
 	 */
-	public JSONObject getLocationInfo(double lat, double lng) {
+	public static JSONObject getLocationInfo(double lat, double lng) {
 
 		HttpGet httpGet = new HttpGet(
 				"http://maps.google.com/maps/api/geocode/json?latlng=" + lat
