@@ -15,15 +15,27 @@ public class ReviewBusiness {
 		this.LocationBUS = new LocationBusiness(DBConnection);
 	}
 	
-	public void addReviewToLocation(ReviewVO review, LocationVO location) {
-		// TODO continue the method
+	public void addReviewToLocation(ReviewVO review, LocationVO location) throws Exception {
 		if(location.getID() == 0) {
 			int newID = LocationBUS.registerLocation(location);
 			review.setLocationID(newID);
 		}
+		validateReviewVO(review);
 		DBConnection.addReview(review);
 	}
 	
+	private void validateReviewVO(ReviewVO review) throws Exception {
+		if(review.getComment().isEmpty() || review.getRating() < 1) {
+			throw new Exception("Rating and Comment are mandatory fields");
+		}
+		if(review.getUserID() <= 0) {
+			throw new Exception("User is not logged in");
+		}
+		if(review.getLocationID() <= 0) {
+			throw new Exception("Location not found. Try again.");
+		}
+	}
+
 	public List<ReviewVO> retrieveReviewsList (int locationID) {
 		// TODO create the method
 		DBConnection.retrieveReviewsList(locationID);

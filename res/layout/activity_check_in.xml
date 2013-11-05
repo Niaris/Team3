@@ -55,7 +55,8 @@
 		            android:layout_width="fill_parent"
 		            android:layout_height="35dip"
 		            android:layout_marginLeft="10dip"
-		            android:text="@string/browse_picture_button" />
+		            android:text="@string/browse_picture_button"
+		            android:onClick="browseImage" />
 		    </LinearLayout>
 
 		    <ImageView

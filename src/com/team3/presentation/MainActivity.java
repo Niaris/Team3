@@ -76,13 +76,12 @@ public class MainActivity extends FragmentActivity implements
 	private static final float DEFAULTZOOM = 15;
 	public LocationClient mLocationClient;
 	public Marker marker;
-	public double LONGITUDE;
-	public double LATITUDE;
 	private XMLGenerator xmlGenerator;
 	private UploadFiletoServer fileUploader;
 	private MySQLConnection DBConnection;
-	private String Address;
-	
+	private LocationVO CurrentLocation;
+	private int UserID = 1; // TODO get UserID from logged user
+
 	/**
 	 * Method onCreate is used when the page first loads. It will use the method
 	 * servicesOK which will determine IF the user's device has up-to-date
@@ -101,7 +100,7 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		DBConnection = new MySQLConnection();
 		DBConnection.open();
-		
+
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
 		if (servicesOK()) {
@@ -263,8 +262,7 @@ public class MainActivity extends FragmentActivity implements
 		mgr.saveMapState(Team3Map);
 		DBConnection.close();
 	}// End onStop
-	
-	
+
 	/**
 	 * Method onResume resumes the map when the application re-opens to where it
 	 * was left and updates the camera position. It also restores the map type
@@ -309,17 +307,8 @@ public class MainActivity extends FragmentActivity implements
 			Toast.makeText(this, "Current location isn't available",
 					Toast.LENGTH_SHORT).show();
 		} else {
-			if (marker != null) {
-				marker.remove();
-			}
-
-			LatLng ll = new LatLng(currentLocation.getLatitude(),
+			updateCurrentLocationMarker(currentLocation.getLatitude(),
 					currentLocation.getLongitude());
-			marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
-					"You are here"));
-			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll,
-					DEFAULTZOOM);
-			Team3Map.animateCamera(update);
 		}
 	}// Ends gotoCurrentLocation
 
@@ -370,7 +359,6 @@ public class MainActivity extends FragmentActivity implements
 		mLocationClient.requestLocationUpdates(request, this);
 	}// Ends requestLocationUpdates
 
-	@SuppressLint("SimpleDateFormat")
 	@Override
 	/**
 	 * Method onLocationChanged responsible for updating Address Description of
@@ -382,31 +370,13 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	public void onLocationChanged(Location loc) {
 
-		// SHOWS THE DATE/TIME (CALENDAR)
 		String Date = DateTimeManipulator.getCurrentDate();
 		String Time = DateTimeManipulator.getCurrentTime();
-		
-		// Declared the Latitude and Longitude
+
 		double LAT = loc.getLatitude();
 		double LONG = loc.getLongitude();
-		LATITUDE = LAT;
-		LONGITUDE = LONG;
-		// Remove and Add Map Marker
-		LatLng ll = new LatLng(LAT, LONG);
-		if (marker == null) {
-			marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
-					"You are here"));
-			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll,
-					DEFAULTZOOM);
-			Team3Map.animateCamera(update);
-		} else {
-			marker.remove();
-			marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
-					"You are here"));
-			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll,
-					DEFAULTZOOM);
-			Team3Map.animateCamera(update);
-		}// End Remove and Add Marker
+
+		updateCurrentLocationMarker(LAT, LONG);
 
 		// Text View for showing Latitude
 		TextView tvLat = (TextView) this.findViewById(R.id.txLat); // NEW ONE
@@ -435,41 +405,58 @@ public class MainActivity extends FragmentActivity implements
 
 			tvAddress.setText(location_string);
 
-			Address = String.valueOf(location_string);
+			CurrentLocation = new LocationVO(location_string, LAT, LONG);
 
 			// This gives the device a UNIQUE ID (NOTE: Try to add this to
 			// another Class).
 			String deviceId = Secure.getString(this.getContentResolver(),
 					Secure.ANDROID_ID);
 
+			 /* IMPORTANT!!! Left this part of the code commented for now, because we have limited 
+			 * requests to the server
+			 */
 			// Calls generateXML method in order to save the details to an XML
 			// file
-			try {
-				xmlGenerator.generate(Date, Time, deviceId, loc, Address);
-				Toast.makeText(this, "File has been created.",
-						Toast.LENGTH_SHORT).show();
-			} catch (Exception e) {
-				Toast.makeText(this, "An error has occured. Restart the app.",
-						Toast.LENGTH_SHORT).show();
-			}
-
-			// Calls uploadToServer in order to upload the xml file to the
-			// server.
-			try {
-				fileUploader.upload(Date, Time, deviceId);
-			} catch (Exception e) {
-				Toast.makeText(this, "An error has occured" + e.getMessage(),
-						Toast.LENGTH_SHORT).show();
-			}
-			Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
-
-		} catch (JSONException e1) {
-			Toast.makeText(this, "Error: " + e1.getMessage(), Toast.LENGTH_SHORT).show();
+			/*
+			 * try { xmlGenerator.generate(Date, Time, deviceId, loc, Address);
+			 * Toast.makeText(this, "File has been created.",
+			 * Toast.LENGTH_SHORT).show(); } catch (Exception e) {
+			 * Toast.makeText(this, "An error has occured. Restart the app.",
+			 * Toast.LENGTH_SHORT).show(); }
+			 * 
+			 * // Calls uploadToServer in order to upload the xml file to the //
+			 * server. try { fileUploader.upload(Date, Time, deviceId); } catch
+			 * (Exception e) { Toast.makeText(this, "An error has occured" +
+			 * e.getMessage(), Toast.LENGTH_SHORT).show(); }
+			 * Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
+			 */
+			} catch (JSONException e1) {
+			Toast.makeText(this, "Error: " + e1.getMessage(),
+					Toast.LENGTH_SHORT).show();
 			e1.printStackTrace();
 
 		}
 
 	}// Ends onLocationChanged
+
+	/**
+	 * update the marker for the Current Location of the user on the map
+	 * according to the updated latitude and longitude of the user.
+	 * @param latitude
+	 * @param longitude
+	 * @param title
+	 */
+	private void updateCurrentLocationMarker(double latitude, double longitude) {
+		if (marker != null) {
+			marker.remove();
+		}
+		LatLng ll = new LatLng(latitude, longitude);
+		marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
+				"You are here"));
+		CameraUpdate update = CameraUpdateFactory
+				.newLatLngZoom(ll, DEFAULTZOOM);
+		Team3Map.animateCamera(update);
+	}
 
 	/**
 	 * onPause method, used as part of the activity lifecycle when an activity
@@ -482,18 +469,20 @@ public class MainActivity extends FragmentActivity implements
 		super.onPause();
 		mLocationClient.removeLocationUpdates(this);
 	}// Ends onPause
-	
+
 	/**
-	 * checkIn method, used when the user clicks on the "Check in" button.
-	 * It takes the user to another screen: "Check in"
+	 * checkIn method, used when the user clicks on the "Check in" button. It
+	 * takes the user to another screen called "Check in"
 	 * 
-	 * @return void Returns a void object.
+	 * @return void
 	 */
-	public void checkIn(View view){
+	public void checkIn(View view) {
 		Intent intent = new Intent(this, CheckInActivity.class);
-		if(!Address.isEmpty() && LATITUDE != 0 && LONGITUDE != 0) {
-			LocationVO location = new LocationVO(Address, LATITUDE, LONGITUDE);
-			intent.putExtra("LocationVO", location);
+		if (!CurrentLocation.getAddress().isEmpty()
+				&& CurrentLocation.getLatitude() != 0
+				&& CurrentLocation.getLongitude() != 0) {
+			intent.putExtra("LocationVO", CurrentLocation);
+			intent.putExtra("UserID", UserID);
 			startActivity(intent);
 		}
 	}
