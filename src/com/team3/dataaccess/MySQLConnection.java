@@ -23,13 +23,13 @@ public class MySQLConnection {
 	
 	public MySQLConnection(){
 		try {
-			EstablishMySQLConnection();
+			connectToServer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public void EstablishMySQLConnection () throws Exception {
+	public void connectToServer () throws Exception {
 		HttpURLConnection connection = null;
 		String DBConnection = "http://54.246.220.68/config.inc.php";
 		String boundary = "*****";
