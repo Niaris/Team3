@@ -1,19 +1,50 @@
 package com.team3.dataaccess;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.List;
+
+import android.os.Environment;
+import android.util.Log;
 
 import com.team3.entities.LocationVO;
 import com.team3.entities.ReviewVO;
 
 public class MySQLConnection {
-
-	public MySQLConnection () {
-		connectToServer();
-	}
 	
-	private void connectToServer() {
-		// TODO
-		
+	@SuppressWarnings("unused")
+	private String DBConnection;
+	@SuppressWarnings("unused")
+	private int serverResponseCode;
+	
+	public MySQLConnection(){
+		try {
+			EstablishMySQLConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void EstablishMySQLConnection () throws Exception {
+		HttpURLConnection connection = null;
+		String DBConnection = "http://54.246.220.68/config.inc.php";
+		String boundary = "*****";
+		try {
+			URL url = new URL(DBConnection);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Connection", "Keep-Alive");
+			connection.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
+			serverResponseCode = connection.getResponseCode();
+		} catch (Exception e) {
+			Log.e("Upload File", e.getMessage());
+			throw e;
+			// Exception handling
+		}
 	}
 	
 	
@@ -32,7 +63,7 @@ public class MySQLConnection {
 		
 	}
 
-	public List<ReviewVO> retrieveReviewsList(int locationID) {
+	public List<ReviewVO> retrieveReviewsList(int locationID) { 
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -46,5 +77,4 @@ public class MySQLConnection {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
