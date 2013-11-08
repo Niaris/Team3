@@ -41,8 +41,7 @@ public class MySQLConnection {
 			connection.setRequestProperty("Content-Type","multipart/form-data;boundary=" + boundary);
 			serverResponseCode = connection.getResponseCode();
 		} catch (Exception e) {
-			Log.e("Upload File", e.getMessage());
-			throw e;
+			Log.e("Upload File", " "+e.getMessage().toString());
 			// Exception handling
 		}
 	}

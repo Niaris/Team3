@@ -6,7 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="normal">Normal</string>
     <string name="sattelite">Satellite</string>
-    <string name="none">None</string>
     <string name="hybrid">Hybrid</string>
     <string name="none">None</string>
     <string name="terrain">Terrain</string>

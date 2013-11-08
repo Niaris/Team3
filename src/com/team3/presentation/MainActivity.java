@@ -22,7 +22,6 @@ package com.team3.presentation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -39,7 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.team3.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -54,6 +52,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.team3.R;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.dataaccess.UploadFiletoServer;
 import com.team3.dataaccess.XMLGenerator;
@@ -98,8 +97,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		DBConnection = new MySQLConnection();
-		DBConnection.open();
+		//DBConnection = new MySQLConnection(); FIXME (CHARA) 
+		//DBConnection.open(); FIXME (CHARA) 
 
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
@@ -260,7 +259,7 @@ public class MainActivity extends FragmentActivity implements
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
-		DBConnection.close();
+		//DBConnection.close(); FIXME (CHARA) 
 	}// End onStop
 
 	/**

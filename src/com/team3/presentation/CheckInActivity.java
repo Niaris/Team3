@@ -1,6 +1,6 @@
 package com.team3.presentation;
 
-import com.example.team3.R;
+import com.team3.R;
 import com.team3.business.ReviewBusiness;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.entities.LocationVO;
