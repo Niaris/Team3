@@ -122,7 +122,7 @@ public class CheckInActivity extends Activity {
 		TextView imagePathArea = (TextView) this.findViewById(R.id.imagePathArea);
 		String imagePath = imagePathArea.getText().toString();
 		
-		return new ReviewVO(UserID, Location.getID(), rating, date, time, comment, imagePath);
+		return new ReviewVO(ReviewBUS.getUserByID(UserID), Location.getID(), rating, date, time, comment, imagePath);
 	}
 	
 	@Override

@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="normal">Normal</string>
     <string name="sattelite">Satellite</string>
+    <string name="none">None</string>
     <string name="hybrid">Hybrid</string>
     <string name="none">None</string>
     <string name="terrain">Terrain</string>
@@ -18,5 +19,7 @@
     <string name="add_comment_text">Add a Comment:</string>
     <string name="save_review_button">Save Review</string>
     <string name="checkin_button">Check in</string>
+    <string name="title_user_login">Log in</string>
+    <string name="main_activity">Main Activity</string>
 
 </resources>

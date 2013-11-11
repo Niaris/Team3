@@ -3,18 +3,18 @@ package com.team3.entities;
 public class ReviewVO {
 
 	private int ID;
-	private int UserID;
 	private int LocationID;
 	private int rating;
 	private String Date;
 	private String Time;
 	private String Comment;
 	private String ImagePath;
+	private UserVO User;
 	
 	
-	public ReviewVO(int userID, int locationID, int rating, String date,
+	public ReviewVO(UserVO user, int locationID, int rating, String date,
 			String time, String comment, String imagePath) {
-		this.UserID = userID;
+		this.User = user;
 		this.LocationID = locationID;
 		this.rating = rating;
 		this.Date = date;
@@ -30,11 +30,8 @@ public class ReviewVO {
 	public void setID(int iD) {
 		ID = iD;
 	}
-	public int getUserID() {
-		return UserID;
-	}
-	public void setUserID(int userID) {
-		UserID = userID;
+	public UserVO getUser() {
+		return User;
 	}
 	public int getLocationID() {
 		return LocationID;

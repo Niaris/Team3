@@ -19,6 +19,9 @@
 
 package com.team3.presentation;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,12 +50,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.team3.R;
+import com.team3.business.LocationBusiness;
 import com.team3.dataaccess.MySQLConnection;
 import com.team3.dataaccess.UploadFiletoServer;
 import com.team3.dataaccess.XMLGenerator;
@@ -79,6 +85,8 @@ public class MainActivity extends FragmentActivity implements
 	private UploadFiletoServer fileUploader;
 	private MySQLConnection DBConnection;
 	private LocationVO CurrentLocation;
+	private LocationBusiness locationBUS;
+	private HashMap<Marker, LocationVO> markerLocationMap;
 	private int UserID = 1; // TODO get UserID from logged user
 
 	/**
@@ -97,8 +105,9 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//DBConnection = new MySQLConnection(); FIXME (CHARA) 
-		//DBConnection.open(); FIXME (CHARA) 
+		DBConnection = new MySQLConnection();
+		locationBUS = new LocationBusiness(DBConnection);
+		markerLocationMap = new HashMap<Marker, LocationVO>();
 
 		xmlGenerator = new XMLGenerator();
 		fileUploader = new UploadFiletoServer();
@@ -121,8 +130,32 @@ public class MainActivity extends FragmentActivity implements
 		} else {
 			setContentView(R.layout.activity_main);
 		}
-
+		
+		Intent intent = getIntent();
+		String userEmail = intent.getStringExtra("UserEmail");
+		Toast.makeText(this, "Logged user email is " + userEmail, Toast.LENGTH_LONG).show();
 	}// Ends onCreate
+
+	private void loadRegisteredLocations() {
+		List<LocationVO> locList = locationBUS.retrieveLocationsByUserPosition(
+				CurrentLocation.getLatitude(), CurrentLocation.getLongitude());
+		markerLocationMap.clear();
+		for (LocationVO loc : locList) {
+			Marker tempMarker = addRedMarker(loc.getLatitude(),
+					loc.getLongitude(), loc.getAddress());
+			markerLocationMap.put(tempMarker, loc);
+		}
+	}
+
+	private Marker addRedMarker(double latitude, double longitude,
+			String address) {
+		LatLng ll = new LatLng(latitude, longitude);
+		return Team3Map.addMarker(new MarkerOptions()
+				.position(ll)
+				.title(address)
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+	}
 
 	/**
 	 * Method onCreateOptionsMenu inflates the menu. This adds items to the
@@ -177,6 +210,23 @@ public class MainActivity extends FragmentActivity implements
 			SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map);
 			Team3Map = mapFrag.getMap();
+			Team3Map.setOnMarkerClickListener(new OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					LocationVO loc = markerLocationMap.get(marker);
+					if (loc != null) {
+						Toast.makeText(getBaseContext(), loc.getAddress(),
+								Toast.LENGTH_SHORT).show();
+						Intent intent = new Intent(getBaseContext(),
+								ReviewsActivity.class);
+						intent.putExtra("LocationVO", loc);
+						intent.putExtra("UserID", UserID);
+						startActivity(intent);
+					}
+					// TODO pass to the new screen to show the reviews!
+					return false;
+				}
+			});
 
 		}
 		return (Team3Map != null);
@@ -259,7 +309,7 @@ public class MainActivity extends FragmentActivity implements
 		super.onStop();
 		MapStateManager mgr = new MapStateManager(this);
 		mgr.saveMapState(Team3Map);
-		//DBConnection.close(); FIXME (CHARA) 
+		DBConnection.close();
 	}// End onStop
 
 	/**
@@ -358,15 +408,16 @@ public class MainActivity extends FragmentActivity implements
 		mLocationClient.requestLocationUpdates(request, this);
 	}// Ends requestLocationUpdates
 
-	@Override
 	/**
 	 * Method onLocationChanged responsible for updating Address Description of
 	 * the updated location.
 	 * 
-	 * @param Location loc hold the value of the updated location.
+	 * @param Location
+	 *            loc hold the value of the updated location.
 	 * 
 	 * @return Returns a void object.
 	 */
+	@Override
 	public void onLocationChanged(Location loc) {
 
 		String Date = DateTimeManipulator.getCurrentDate();
@@ -404,32 +455,35 @@ public class MainActivity extends FragmentActivity implements
 
 			tvAddress.setText(location_string);
 
-			CurrentLocation = new LocationVO(location_string, LAT, LONG);
+			CurrentLocation = new LocationVO(location_string, LAT, LONG, "");
+			loadRegisteredLocations();
+			
 
 			// This gives the device a UNIQUE ID (NOTE: Try to add this to
 			// another Class).
 			String deviceId = Secure.getString(this.getContentResolver(),
 					Secure.ANDROID_ID);
 
-			 /* IMPORTANT!!! Left this part of the code commented for now, because we have limited 
-			 * requests to the server
+			/*
+			 * IMPORTANT!!! Left this part of the code commented for now,
+			 * because we have limited requests to the server
 			 */
 			// Calls generateXML method in order to save the details to an XML
 			// file
+
 			/*
-			 * try { xmlGenerator.generate(Date, Time, deviceId, loc, Address);
-			 * Toast.makeText(this, "File has been created.",
+			 * try { xmlGenerator.generate(Date, Time, deviceId, loc,
+			 * location_string); Toast.makeText(this, "File has been created.",
 			 * Toast.LENGTH_SHORT).show(); } catch (Exception e) {
 			 * Toast.makeText(this, "An error has occured. Restart the app.",
 			 * Toast.LENGTH_SHORT).show(); }
 			 * 
-			 * // Calls uploadToServer in order to upload the xml file to the //
-			 * server. try { fileUploader.upload(Date, Time, deviceId); } catch
-			 * (Exception e) { Toast.makeText(this, "An error has occured" +
-			 * e.getMessage(), Toast.LENGTH_SHORT).show(); }
+			 * // Calls uploadToServer in order to upload the xml file to the
+			 * //server. try { fileUploader.upload(Date, Time, deviceId); }
+			 * catch (Exception e) { Toast.makeText(this, "An error has occured"
+			 * + e.getMessage(), Toast.LENGTH_SHORT).show(); }
 			 * Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show();
-			 */
-			} catch (JSONException e1) {
+			 */} catch (JSONException e1) {
 			Toast.makeText(this, "Error: " + e1.getMessage(),
 					Toast.LENGTH_SHORT).show();
 			e1.printStackTrace();
@@ -441,6 +495,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * update the marker for the Current Location of the user on the map
 	 * according to the updated latitude and longitude of the user.
+	 * 
 	 * @param latitude
 	 * @param longitude
 	 * @param title
@@ -450,8 +505,11 @@ public class MainActivity extends FragmentActivity implements
 			marker.remove();
 		}
 		LatLng ll = new LatLng(latitude, longitude);
-		marker = Team3Map.addMarker(new MarkerOptions().position(ll).title(
-				"You are here"));
+		marker = Team3Map.addMarker(new MarkerOptions()
+				.position(ll)
+				.title("You are here")
+				.icon(BitmapDescriptorFactory
+						.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 		CameraUpdate update = CameraUpdateFactory
 				.newLatLngZoom(ll, DEFAULTZOOM);
 		Team3Map.animateCamera(update);

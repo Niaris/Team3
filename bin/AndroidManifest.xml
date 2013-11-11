@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="18" />
 
     <permission
         android:name="com.team3.permission.MAPS_RECEIVE"
@@ -50,9 +50,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
+        
         <activity
-            android:name="com.team3.presentation.MainActivity"
+            android:name="com.team3.presentation.Login"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,9 +60,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="com.team3.presentation.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
         <activity
             android:name="com.team3.presentation.CheckInActivity"
             android:label="@string/title_activity_check_in" >
+        </activity>
+        <activity
+            android:name="com.team3.presentation.LoginActivity"
+            android:label="@string/title_user_login" >
         </activity>
         <activity
             android:name="com.team3.presentation.ReviewsActivity"
